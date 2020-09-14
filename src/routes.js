@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import LoginScreen from './pages/Login'
+import LoginScreen from './pages/LoginScreen'
 
 // Importanto Páginas necessárias
 import Agenda from './pages/Agenda';
