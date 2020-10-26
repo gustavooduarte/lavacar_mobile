@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   status: 'aguardando',
   data: '',
   horario: '8:00h',
-  valor: 30.0,
+  valor: "30",
   carro: '',
   forma_pagamento: 'dinheiro',
   endereco: '',

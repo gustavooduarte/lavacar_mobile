@@ -78,8 +78,7 @@ class MeuCarroForm extends React.Component {
         selectSingleItem={true}
         
         callback = { (volta) => {
-          if(volta.lenght > 0){
-            console.log(volta);
+          if(volta.length > 0){
             ImgToBase64.getBase64String(volta[0].uri)
             .then(stringConvertida => {
               this.props.setFieldCarro('img', stringConvertida)

@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TextInput, ScrollView, Button, ActivityIndicator, Alert } from 'react-native';
+
 import { Picker } from '@react-native-community/picker';
 
 import FormRow from '../components/FormRow';
@@ -8,6 +9,7 @@ import DatePicker from 'react-native-datepicker';
 import { connect } from 'react-redux';
 import { setFieldRecibo, createRecibo, setAllFieldsRecibo, resetFormRecibo } from '../actions';
 
+import CheckBox from '@react-native-community/checkbox';
 
 class reciboForm extends React.Component {
 
@@ -15,20 +17,23 @@ class reciboForm extends React.Component {
     super(props);
 
     this.state = {
-      isLoading: false
+      isLoading: false,
+      toggleCheckBox: false
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { route, setAllFieldsRecibo } = this.props;
     const { params } = route;
 
-    if (params && params.reciboToEdit){
+    if (params && params.reciboToEdit) {
       setAllFieldsRecibo(params.reciboToEdit);
-    }else{
+    } else {
       this.props.resetFormRecibo();
     }
   }
+
+
 
   render() {
     const { reciboForm, setFieldRecibo, createRecibo, navigation } = this.props;
@@ -76,12 +81,11 @@ class reciboForm extends React.Component {
           </FormRow>
 
           <FormRow>
-            <Text>Servico:</Text>
+            <Text>Serviço:</Text>
             <View style={styles.picker}>
               <Picker
                 selectedValue={reciboForm.servico}
                 onValueChange={itemValue => setFieldRecibo('servico', itemValue)}
-                enabled = {false}
               >
                 <Picker.Item label="Lavagem de Carro" value="Lavagem de Carro" />
               </Picker>
@@ -92,6 +96,7 @@ class reciboForm extends React.Component {
             <Text>Valor:</Text>
             <TextInput
               style={styles.textInput}
+              keyboardType='numeric'
               placeholder="Digite valor do servico..."
               value={reciboForm.valor}
               onChangeText={value => setFieldRecibo('valor', value)}
@@ -108,19 +113,15 @@ class reciboForm extends React.Component {
             />
           </FormRow>
 
-          <FormRow>
-            <Text>Assinado:</Text>
-            <View style={styles.picker}>
-              <Picker
-                selectedValue={reciboForm.assinado}
-                onValueChange={itemValue => setFieldRecibo('assinado', itemValue)}
-                
-              >
-                <Picker.Item label="Sim" value="Sim" />
-                <Picker.Item label="Não" value="Não" />
-              </Picker>
-            </View>
-          </FormRow>
+          <View style={styles.checkbox}>
+            <CheckBox
+              disabled={false}
+              value={reciboForm.assinado}
+              onValueChange={(newValue) => setFieldRecibo('assinado', newValue)}
+            />
+            <Text>Selecione essa caixa para assinar o recibo.</Text>
+          </View>
+
 
           {
             this.state.isLoading ?
@@ -131,12 +132,12 @@ class reciboForm extends React.Component {
                 color='#00AFEF'
                 onPress={async () => {
                   this.setState({ isLoading: true })
-                  
-                  try{
+
+                  try {
                     await createRecibo(reciboForm);
                     navigation.goBack();
-                  } catch (error){
-                    Alert.alert('Erro',error.message)
+                  } catch (error) {
+                    Alert.alert('Erro', error.message)
                   } finally {
                     this.setState({ isLoading: false })
                   }
@@ -177,6 +178,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     borderColor: 'gray'
+  },
+  checkbox: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 15,
+    fontSize: 14
   }
 });
 
