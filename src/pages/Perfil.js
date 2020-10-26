@@ -43,7 +43,7 @@ export default class Perfil extends React.Component {
             this.state.error ?
               <Text style = {styles.error}>Não foi possivel carregar as informações da conta... Tente novamente, mais tarde</Text>
             :
-              <PerfilInfo perfil={this.state.perfil} onPressButtonExit={() => this.props.navigation.navigate('Login')}/>
+              <PerfilInfo perfil={this.state.perfil} onPressButtonExit={() => this.props.navigation.replace('Login')}/>
         }
         
       </View>

@@ -24,7 +24,7 @@ const AgendamentoList = (props) => {
       <FlatList
         style={styles.list}
         data={agendamentos}
-        keyExtractor={agendamento => agendamento.id}
+        keyExtractor={agendamento => agendamento.id.toString()}
         renderItem={({ item: agendamento }) => (
           <View>
             <View style={[styles.agendamentoStatus, { backgroundColor: statusColor(agendamento.status) }]}>
@@ -64,8 +64,9 @@ const styles = StyleSheet.create({
 
   item: {
     padding: 20,
-    paddingHorizontal: 40,
-    borderRadius: 5,
+    paddingHorizontal: 40, 
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5,
     backgroundColor: '#FFF',
     marginBottom: 16,
     elevation: 2,
@@ -75,7 +76,8 @@ const styles = StyleSheet.create({
     height: 30,
     backgroundColor: '#FC3535',
     alignItems: 'center',
-    borderRadius: 5,
+    borderTopRightRadius: 5,
+    borderTopLeftRadius: 5,
     justifyContent: 'center'
   },
 

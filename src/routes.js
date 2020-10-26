@@ -9,12 +9,16 @@ import LoginScreen from './pages/LoginScreen'
 // Importanto Páginas necessárias
 import Agenda from './pages/Agenda';
 import AgendamentoDetail from './pages/AgendamentoDetail';
+import AgendamentoForm from './pages/AgendamentoForm';
 
 import MeuCarro from './pages/MeuCarro';
+import MeuCarroDetail from './pages/MeuCarroDetail';
+import MeuCarroForm from './pages/MeuCarroForm';
 
 import Recibos from './pages/Recibos';
 
 import Perfil from './pages/Perfil';
+
 
 // ============================================================================
 // ######################### STACK NAVIGATOR ##################################
@@ -26,21 +30,33 @@ function stackAgenda() {
   return (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#00AFEF' }, headerTintColor: 'white' }}>
       <Stack.Screen name="Agenda" component={Agenda}
-        options={{
+        options={ ({navigation}) => ({
           headerLeft: null,
-          headerRight: () => (
-            <TouchableOpacity onPress={() => alert('Em manutenção')}
+          headerRight: () =>(
+            <TouchableOpacity onPress={() => navigation.navigate('AgendamentoForm')}
               style={{ marginRight: 10, elevation: 100 }}
             >
               <Icon name={'plus-circle'} size={35} color="white" />
             </TouchableOpacity>
           ),
-        }}
+        })
+      }
       />
 
       <Stack.Screen name='AgendamentoDetail'
         component={AgendamentoDetail}
         options={{ title: 'Detalhes do Agendamento' }} />
+
+      <Stack.Screen name='AgendamentoForm'
+        component={AgendamentoForm}
+        options={ ({route}) => {
+          if(route.params && route.params.agendamentoToEdit){
+            return { title: 'Atualizar Agendamento'}
+          }else{
+            return { title: 'Agendar Lavagem' }
+          }
+        }} />
+
     </Stack.Navigator>
   );
 }
@@ -49,11 +65,11 @@ function stackAgenda() {
 function stackCarro() {
   return (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#00AFEF' }, headerTintColor: 'white' }}>
-      <Stack.Screen name="Meu Carro" component={MeuCarro}
-        options={{
+      <Stack.Screen name="Carros" component={MeuCarro}
+        options={({ navigation }) => ({
           headerLeft: null,
           headerRight: () => (
-            <TouchableOpacity onPress={() => alert('Em manutenção')}
+            <TouchableOpacity onPress={() => navigation.navigate('MeuCarroForm')}
               style={{ marginRight: 10, elevation: 100 }}
             >
 
@@ -61,8 +77,22 @@ function stackCarro() {
 
             </TouchableOpacity>
           ),
-        }}
+        })}
       />
+
+      <Stack.Screen name='MeuCarroDetail'
+        component={MeuCarroDetail}
+        options={{ title: 'Detalhes do Carro' }} />
+
+      <Stack.Screen name='MeuCarroForm'
+        component={MeuCarroForm}
+        options={({ route }) => {
+          if (route.params && route.params.agendamentoToEdit) {
+            return { title: route.params.agendamentoToEdit.apelido }
+          } else {
+            return { title: 'Registrar Carro' }
+          }
+        }} />
     </Stack.Navigator>
   );
 }
@@ -76,7 +106,7 @@ function stackRecibos() {
   );
 }
 
-// ######################### RECIBOS ##################################
+// ######################### Perfil ##################################
 function stackPerfil() {
   return (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#00AFEF' }, headerTintColor: 'white' }}>
@@ -132,7 +162,7 @@ export default function Routes() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Home" component={tabHome} options={{ headerShown: false}}/>
+        <Stack.Screen name="Home" component={tabHome} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
 

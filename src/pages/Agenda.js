@@ -1,21 +1,21 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import AgendamentoList from '../components/AgendamentoList'
+import { View, Text, StyleSheet, ActivityIndicator} from 'react-native';
+import AgendamentoList from '../components/AgendamentoList';
 
-export default class Agenda extends React.Component {
-  constructor(props) {
-    super(props);
+import { connect } from 'react-redux';
 
-    this.state = {
-      agendamentos: [
-        { id: '3', servico: 'lavagem', status: 'aguardando', data: '31/08/2020', horario: '15:00h', valor: 30.00, carro: 'Fiat Fire', forma_pagamento: 'Dinheiro', endereco: 'Avenida Alberto Carazzai, 16640, Cornélio Procópio - PR' },
-        { id: '2', servico: 'lavagem', status: 'confirmado', data: '31/08/2020', horario: '15:00h', valor: 30.00, carro: 'Jeep Renegate', forma_pagamento: 'Dinheiro', endereco: 'Avenida Alberto Carazzai, 16640, Cornélio Procópio - PR' },
-        { id: '1', servico: 'lavagem', status: 'cancelado', data: '10/09/2019', horario: '13:30h', valor: 30.00, carro: 'Jeep Renegate', forma_pagamento: 'Cartão', endereco: 'Avenida Alberto Carazzai, 16640, Cornélio Procópio - PR' },
-      ]
-    }
+import { watchAgendamentos } from '../actions'
+
+class Agenda extends React.Component {
+  componentDidMount(){
+    this.props.watchAgendamentos();
   }
 
   render() {
+    if(this.props.agendamentos == null){
+      return <ActivityIndicator color='#00AFEF' />
+    }
+
     return (
       <View>
         <View style={styles.title}>
@@ -24,7 +24,7 @@ export default class Agenda extends React.Component {
 
         <View style={styles.container}>
           <AgendamentoList
-            agendamentos={this.state.agendamentos}
+            agendamentos={this.props.agendamentos}
             onPressItem={(parameters) => this.props.navigation.navigate('AgendamentoDetail', parameters)} />
         </View>
       </View>
@@ -53,3 +53,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   }
 });
+
+const mapStateToProps = state => {
+  const { agendamentosList } = state;
+
+  if(agendamentosList == null){
+    return {agendamentos: agendamentosList};
+  }
+
+  const keys = Object.keys(agendamentosList)
+  const agendamentosListWithId = keys.map(key => {
+    return {...agendamentosList[key], id:key}
+  })
+
+  return {
+    agendamentos: agendamentosListWithId,
+
+  }
+}
+
+export default connect(mapStateToProps, {watchAgendamentos})(Agenda);

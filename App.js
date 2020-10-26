@@ -1,9 +1,9 @@
 import React from 'react';
-import Routes from './src/routes'
+import LavacarApp from './src/LavacarApp'
 
 function App() {
   return (
-    <Routes />
+    <LavacarApp />
   );
 }
 

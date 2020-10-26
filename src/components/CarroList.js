@@ -25,7 +25,7 @@ const CarroList = (props) => {
 
               <TouchableOpacity
                 style={styles.detailsButton}
-                onPress={() => { alert(' Parte em Manutenção ') }}
+                onPress={() => { onPressItem({ carro }); }}
               >
                 <Text style={styles.detailsButtonText}>Ver mais detalhes</Text>
                 <Icon name="arrow-right-thick" size={16} color="#00AFEF" />

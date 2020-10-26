@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView, Alert, Button} from 'react-native';
 import PerfilInfoLine from './PerfilInfoLine'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 const PerfilInfo = (props) => {
   const { perfil, onPressButtonExit } = props
@@ -30,6 +31,8 @@ const PerfilInfo = (props) => {
           <Icon name={'exit-to-app'} color='#888' size={30} />
         </TouchableOpacity>
         <Text style={styles.textSair}>Sair</Text>
+
+
       </ScrollView>
       
 
