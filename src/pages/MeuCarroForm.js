@@ -1,11 +1,28 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, ScrollView, Button, ActivityIndicator, Alert } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  Button,
+  ActivityIndicator,
+  Alert,
+  Image,
+  TouchableOpacity,
+  PermissionsAndroid
+} from 'react-native';
+
 import { Picker } from '@react-native-community/picker';
 
-import FormRow from '../components/FormRow';
+import { RNCamera } from 'react-native-camera';
+import CameraRollPicker from 'react-native-camera-roll-picker';
+import ImgToBase64 from 'react-native-image-base64';
 
+import FormRow from '../components/FormRow';
 import { connect } from 'react-redux';
 import { setFieldCarro, createCarro, setAllFieldsCarro, resetFormCarro } from '../actions';
+
 
 class MeuCarroForm extends React.Component {
 
@@ -13,23 +30,123 @@ class MeuCarroForm extends React.Component {
     super(props);
 
     this.state = {
-      isLoading: false
+      isLoading: false,
+      isCamera: false,
+      isCameraRoll: false
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { route, setAllFieldsCarro } = this.props;
     const { params } = route;
 
-    if (params && params.carroToEdit){
+    if (params && params.carroToEdit) {
       setAllFieldsCarro(params.carroToEdit);
-    }else{
+    } else {
       this.props.resetFormCarro();
     }
-
   }
 
-  render() {
+  takePicture = async () => {
+    if (this.camera) {
+      const options = {
+        quality: 0.5,
+        base64: true,
+        forceUpOrientation: true,
+        fixOrientation: true
+      }
+
+      const data = await this.camera.takePictureAsync(options);
+
+      if (data) {
+        this.props.setFieldCarro('img', data.base64);
+
+        this.setState({
+          isCamera: false
+        })
+      }
+
+    }
+  }
+
+  viewGallery() {
+    this.requestExternalStorageAcces();
+
+    return (
+      <CameraRollPicker
+        maximum = {1}
+        selectSingleItem={true}
+        
+        callback = { (volta) => {
+          if(volta.lenght > 0){
+            console.log(volta);
+            ImgToBase64.getBase64String(volta[0].uri)
+            .then(stringConvertida => {
+              this.props.setFieldCarro('img', stringConvertida)
+            })
+            .catch(error => {
+              console.log(error)
+            })
+          }
+
+          this.setState({
+            isCameraRoll: false
+          })
+        }}
+
+      />
+    )
+  }
+
+  async requestExternalStorageAcces(){
+    try{
+      const permission = await PermissionsAndroid
+        .request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
+
+        if(permission !== PermissionsAndroid.RESULTS.GRANTED){
+          Alert.alert('Permissão Negada')
+        }
+    }catch (error){
+      console.log(error);
+    }
+  }
+
+  viewCamera() {
+    return (
+      <View style={styles.camera}>
+        <RNCamera
+          ref={ref => {
+            this.camera = ref;
+          }}
+          style={styles.preview}
+          type={RNCamera.Constants.Type.back}
+          flashMode={RNCamera.Constants.FlashMode.on}
+          androidCameraPermissionOptions={{
+            title: 'Permission to use camera',
+            message: 'Nós precisamos de sua permisão para usar a câmera',
+            buttonPositive: 'Aceito',
+            buttonNegative: 'Cancelar'
+          }}
+          androidRecordAudioPermissionOptions={{
+            title: 'Permission to record audio',
+            message: 'Nós precisamos de sua permisão para gravar áudio',
+            buttonPositive: 'Aceito',
+            buttonNegative: 'Cancelar'
+          }}
+        />
+        <View>
+          <TouchableOpacity
+            style={styles.capture}
+            onPress={this.takePicture.bind(this)}>
+            <Text style = {{color: 'white'}}>Capturar!</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+
+  viewForm() {
     const { carroForm, setFieldCarro, createCarro, navigation } = this.props;
 
     return (
@@ -46,14 +163,49 @@ class MeuCarroForm extends React.Component {
           </FormRow>
 
           <FormRow>
-            <Text>IMG URL:</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Digite url image..."
-              value={carroForm.img}
-              onChangeText={value => setFieldCarro('img', value)}
-            />
+            <Text>Imagem:</Text>
+            {
+              carroForm.img ?
+                <Image source={{ uri: `data:image/jpeg;base64,${carroForm.img}` }}
+                  style={styles.carroImage}
+                />
+                :
+                null
+            }
+
+            <View>
+              <Button
+                color='gray'
+                title="Capturar Imagem"
+                onPress={() => {
+                  Alert.alert(
+                    'Captura Imagem',
+                    'De onde você quer pegar a imagem?',
+                    [
+                      {
+                        text: 'Câmera',
+                        onPress: () => {
+                          this.setState({
+                            isCamera: true
+                          })
+                        }
+                      },
+                      {
+                        text: 'Galeria',
+                        onPress: () => {
+                          this.setState({
+                            isCameraRoll: true
+                          })
+                        }
+                      }
+                    ]
+                  )
+                }}
+              />
+            </View>
           </FormRow>
+
+          
 
           <FormRow>
             <Text>Marca:</Text>
@@ -98,12 +250,12 @@ class MeuCarroForm extends React.Component {
                 color='#00AFEF'
                 onPress={async () => {
                   this.setState({ isLoading: true })
-                  
-                  try{
+
+                  try {
                     await createCarro(carroForm);
                     navigation.goBack();
-                  } catch (error){
-                    Alert.alert('Erro',error.message)
+                  } catch (error) {
+                    Alert.alert('Erro', error.message)
                   } finally {
                     this.setState({ isLoading: false })
                   }
@@ -114,6 +266,18 @@ class MeuCarroForm extends React.Component {
         </View>
       </ScrollView>
     )
+  }
+
+  render() {
+    if(this.state.isCameraRoll){
+      return (this.viewGallery());
+    }
+
+    if (this.state.isCamera) {
+      return (this.viewCamera());
+    }
+
+    return (this.viewForm());
 
   }
 }
@@ -140,10 +304,36 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
+  carroImage: {
+    aspectRatio: 1,
+    width: '100%',
+    marginBottom: 5
+  },
   picker: {
     borderWidth: 1,
     borderRadius: 5,
     borderColor: 'gray'
+  },
+  camera: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'black'
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
+  capture: {
+    flex: 0,
+    backgroundColor: '#00AFEF',
+    borderRadius: 5,
+    padding: 10,
+    paddingHorizontal: 20,
+    alignSelf: 'center',
+    marginBottom: 5,
+    marginTop: 50,
+    marginHorizontal: 20
   }
 });
 

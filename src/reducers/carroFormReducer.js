@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   img: "",
   marca: "",
   modelo: "",
-  tamanho: "",
+  tamanho: "Pequeno",
 }
 
 export default function (state = INITIAL_STATE, action) {

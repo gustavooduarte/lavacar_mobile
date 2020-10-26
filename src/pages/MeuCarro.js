@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import CarroList from '../components/CarroList'
 
 import { connect } from 'react-redux';
@@ -12,6 +12,14 @@ class MeuCarro extends React.Component {
   }
 
   render() {
+    if (this.props.carros == null) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator size={150} color='#00AFEF' />
+        </View>
+      )
+    }
+
     return (
       <View>
           <CarroList
@@ -21,6 +29,13 @@ class MeuCarro extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  loading: {
+    alignContent: 'center',
+    height: '100%',
+  },
+});
 
 const mapStateToProps = state => {
   const { carrosList } = state;

@@ -13,7 +13,11 @@ class Agenda extends React.Component {
 
   render() {
     if(this.props.agendamentos == null){
-      return <ActivityIndicator color='#00AFEF' />
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator size={150} color='#00AFEF' />
+        </View>
+      ) 
     }
 
     return (
@@ -33,6 +37,10 @@ class Agenda extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  loading:{
+    alignContent: 'center',
+    height: '100%',
+  },
   container: {
     marginBottom: 100,
   },

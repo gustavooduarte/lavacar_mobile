@@ -1,32 +1,29 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Button, Image } from 'react-native';
+import { View, StyleSheet, ScrollView, Button } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Line from '../components/Line'
-import LongText from '../components/LongText'
 
 import { connect } from 'react-redux';
-import { deleteCarro }from '../actions';
+import { deleteRecibo }from '../actions';
 
-class CarroDetail extends React.Component {
+class ReciboDetail extends React.Component {
   render() {
 
-    const { carro } = this.props.route.params;
+    const { recibo } = this.props.route.params;
 
     return (
       <ScrollView>
         <View style={styles.container}>
-          <Image 
-            source={
-              { 
-                uri: `data:image/jpeg;base64,${carro.img}`  
-              }
-            }
-            style={styles.carroImage}
-          />
-
-          <Line label={"Apelido"} content={carro.apelido} />
-          <Line label={"Marca"} content={carro.marca} />
-          <Line label={"Modelo"} content={carro.modelo} />
-          <Line label={"Tamanho"} content={carro.tamanho} />
+          <View style={styles.calendarIcon}>
+            <Icon name={'format-list-bulleted'} size={70} color='#808080' />
+          </View>
+          <Line label={"Nome"} content={recibo.nome} />
+          <Line label={"CPF"} content={recibo.cpf} />
+          <Line label={"Data de Emissão"} content={recibo.data_emissao} />
+          <Line label={"Servico"} content={recibo.servico} />
+          <Line label={"Valor"} content={recibo.valor} />
+          <Line label={"Cidade"} content={recibo.cidade} />
+          <Line label={"Assinado"} content={recibo.assinado} />
 
           <View style = {styles.opcoes}>
             <View style={styles.button}>
@@ -34,7 +31,7 @@ class CarroDetail extends React.Component {
                 color='#00AFEF'
                 title='Editar'
                 onPress={() => {
-                  this.props.navigation.replace('MeuCarroForm', { carroToEdit: carro });
+                  this.props.navigation.replace('ReciboForm', { reciboToEdit: recibo });
                 }}
               />
             </View>
@@ -44,7 +41,7 @@ class CarroDetail extends React.Component {
                 color='#FF6961'
                 title='Excluir'
                 onPress={ async () => {
-                  const hasDeleted = await this.props.deleteCarro(carro);
+                  const hasDeleted = await this.props.deleteRecibo(recibo);
 
                   if(hasDeleted) {
                     this.props.navigation.goBack();
@@ -63,14 +60,6 @@ class CarroDetail extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  carroImage: {
-    aspectRatio: 1,
-    height: 200,
-    borderRadius: 200 / 2,
-    borderWidth: 1,
-    alignSelf: 'center',
-    marginBottom: 20
-  },
   opcoes:{
     flexDirection: 'row'
   },
@@ -85,10 +74,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   button: {
-    marginTop: 15,
     margin: 4,
     flex: 2
   }
 });
 
-export default connect(null, {deleteCarro})(CarroDetail);
+export default connect(null, {deleteRecibo})(ReciboDetail);

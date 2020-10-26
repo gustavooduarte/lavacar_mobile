@@ -16,6 +16,8 @@ import MeuCarroDetail from './pages/MeuCarroDetail';
 import MeuCarroForm from './pages/MeuCarroForm';
 
 import Recibos from './pages/Recibos';
+import ReciboDetail from './pages/ReciboDetail';
+import ReciboForm from './pages/ReciboForm';
 
 import Perfil from './pages/Perfil';
 
@@ -87,8 +89,8 @@ function stackCarro() {
       <Stack.Screen name='MeuCarroForm'
         component={MeuCarroForm}
         options={({ route }) => {
-          if (route.params && route.params.agendamentoToEdit) {
-            return { title: route.params.agendamentoToEdit.apelido }
+          if (route.params && route.params.carroToEdit) {
+            return { title: route.params.carroToEdit.apelido }
           } else {
             return { title: 'Registrar Carro' }
           }
@@ -101,7 +103,34 @@ function stackCarro() {
 function stackRecibos() {
   return (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#00AFEF' }, headerTintColor: 'white' }}>
-      <Stack.Screen name="Recibos" component={Recibos} options={{ headerLeft: null }} />
+      <Stack.Screen name="Recibos" component={Recibos}
+        options={({ navigation }) => ({
+          headerLeft: null,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('ReciboForm')}
+              style={{ marginRight: 10, elevation: 100 }}
+            >
+
+              <Icon name={'plus-circle'} size={35} color="white" />
+
+            </TouchableOpacity>
+          ),
+        })}
+      />
+
+      <Stack.Screen name='ReciboDetail'
+        component={ReciboDetail}
+        options={{ title: 'Detalhes do Recibo' }} />
+      
+      <Stack.Screen name='ReciboForm'
+        component={ReciboForm}
+        options={({ route }) => {
+          if (route.params && route.params.reciboToEdit) {
+            return { title: 'Editar Recibo' }
+          } else {
+            return { title: 'Criar Recibo' }
+          }
+        }} />
     </Stack.Navigator>
   );
 }
