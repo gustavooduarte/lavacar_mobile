@@ -1,13 +1,47 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Button } from 'react-native';
+import { View, StyleSheet, ScrollView, Button, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Line from '../components/Line'
 import LongText from '../components/LongText'
 
 import { connect } from 'react-redux';
 import { deleteAgendamento }from '../actions';
+import { STATUS_REALIZADO } from '../utils';
 
 class AgendamentoDetail extends React.Component {
+
+  renderBtnRecibo(){
+    const { agendamento } = this.props.route.params;
+    const recibo = {
+      id: null,
+      assinado: false,
+      endereco: agendamento.endereco,
+      cpf: "",
+      data_emissao: agendamento.data,
+      nome: "",
+      servico: "lavagem de carro",
+      valor: agendamento.valor
+    }
+
+    if(agendamento.status == STATUS_REALIZADO){
+
+      return (
+        <View>
+          <TouchableOpacity
+            style={styles.btnEmitirRecibo}
+            onPress={() => {
+              console.log(recibo.data_emissao)
+              this.props.navigation.navigate('ReciboForm', { reciboToEdit: recibo });
+            }}
+          >
+            <Icon name={'border-color'} color='#888' size={30} />
+          </TouchableOpacity>
+          <Text style={styles.textEmitirRecibo}>Criar Recibo</Text>
+        </View>
+      )
+    }
+  }
+
   render() {
 
     const { agendamento } = this.props.route.params;
@@ -54,7 +88,8 @@ class AgendamentoDetail extends React.Component {
             </View>
           </View>
         </View>
-        
+
+        { this.renderBtnRecibo() }
 
       </ScrollView>
     );
@@ -78,7 +113,18 @@ const styles = StyleSheet.create({
   button: {
     margin: 4,
     flex: 2
-  }
+  },
+  btnEmitirRecibo: {
+    backgroundColor: '#FFF',
+    elevation: 3,
+    alignSelf: 'center',
+    padding: 10,
+    borderRadius: 100
+  },
+  textEmitirRecibo: {
+    alignSelf: 'center',
+    marginBottom: 30,
+  },
 });
 
 export default connect(null, {deleteAgendamento})(AgendamentoDetail);

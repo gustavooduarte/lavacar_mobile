@@ -2,7 +2,7 @@ import { SET_FIELD_AGENDAMENTO, SET_ALL_FIELDS_AGENDAMENTO, RESET_FORM_AGENDAMEN
 
 const INITIAL_STATE = {
   id: null,
-  servico: 'lavagem',
+  servico: 'lavagem de carro',
   status: 'aguardando',
   data: '',
   horario: '8:00h',

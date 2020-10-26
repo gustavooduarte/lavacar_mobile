@@ -3,7 +3,7 @@ import { SET_FIELD_RECIBO, SET_ALL_FIELDS_RECIBO, RESET_FORM_RECIBO } from '../a
 const INITIAL_STATE = {
   id: null,
   assinado: false,
-  cidade: "",
+  endereco: "",
   cpf: "",
   data_emissao: "",
   nome: "",

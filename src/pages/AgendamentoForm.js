@@ -6,7 +6,15 @@ import FormRow from '../components/FormRow';
 import DatePicker from 'react-native-datepicker';
 
 import { connect } from 'react-redux';
-import { setFieldAgendamento, createAgendamento, setAllFieldsAgendamento, resetFormAgendamento } from '../actions';
+import { 
+  setFieldAgendamento, 
+  createAgendamento, 
+  setAllFieldsAgendamento, 
+  resetFormAgendamento,
+  watchCarros
+} from '../actions';
+
+import { STATUS_AGUARDANDO , STATUS_CANCELADO, STATUS_CONFIRMADO, STATUS_REALIZADO } from '../utils'
 
 class AgendamentoForm extends React.Component {
 
@@ -28,14 +36,38 @@ class AgendamentoForm extends React.Component {
       this.props.resetFormAgendamento();
     }
 
+    this.props.watchCarros();
   }
 
   render() {
-    const { agendamentoForm, setFieldAgendamento, createAgendamento, navigation } = this.props;
+    const { agendamentoForm, setFieldAgendamento, createAgendamento, navigation,  } = this.props;
+
+    if (this.props.carros == null) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator size={150} color='#00AFEF' />
+        </View>
+      )
+    }
 
     return (
       <ScrollView style={styles.background}>
         <View style={styles.container}>
+          <FormRow>
+            <Text>Status:</Text>
+            <View style={styles.picker}>
+              <Picker
+                selectedValue={agendamentoForm.status}
+                onValueChange={itemValue => setFieldAgendamento('status', itemValue)}
+              >
+                <Picker.Item label={STATUS_AGUARDANDO} value={STATUS_AGUARDANDO} />
+                <Picker.Item label={STATUS_CONFIRMADO} value={STATUS_CONFIRMADO} />
+                <Picker.Item label={STATUS_CANCELADO} value={STATUS_CANCELADO} />
+                <Picker.Item label={STATUS_REALIZADO} value={STATUS_REALIZADO} />
+              </Picker>
+            </View>
+          </FormRow>
+
           <FormRow>
             <Text>Data:</Text>
             <DatePicker
@@ -76,12 +108,31 @@ class AgendamentoForm extends React.Component {
           </FormRow>
 
           <FormRow>
-            <Text>Carro:</Text>
+            <Text>Selecione o Carro:</Text>
+            <View style={styles.picker}>
+              <Picker
+                selectedValue={agendamentoForm.carro}
+                onValueChange={itemValue => setFieldAgendamento('carro', itemValue)}
+              >
+                {
+                  this.props.carros.map((carro, index) => {
+                    return (
+                      <Picker.Item label={carro.apelido} value={carro.apelido} key={index} />
+                    )
+                  })
+                }
+              </Picker>
+            </View>
+          </FormRow>
+
+          <FormRow>
+            <Text>Valor:</Text>
             <TextInput
               style={styles.textInput}
-              placeholder="Digite nome do carro..."
-              value={agendamentoForm.carro}
-              onChangeText={value => setFieldAgendamento('carro', value)}
+              keyboardType='numeric'
+              placeholder="Digite valor do servico..."
+              value={agendamentoForm.valor}
+              onChangeText={value => setFieldAgendamento('valor', value)}
             />
           </FormRow>
 
@@ -108,7 +159,6 @@ class AgendamentoForm extends React.Component {
               onChangeText={value => setFieldAgendamento('endereco', value)}
             />
           </FormRow>
-
 
           <FormRow>
             <Text>Observações:</Text>
@@ -181,16 +231,32 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  return ({
+  const { carrosList } = state;
+
+  if (carrosList == null) {
+    return { 
+      carros: carrosList,
+      agendamentoForm: state.agendamentoForm
+    };
+  }
+
+  const keys = Object.keys(carrosList)
+  const carrosListWithId = keys.map(key => {
+    return { ...carrosList[key], id: key }
+  })
+
+  return {
+    carros: carrosListWithId,
     agendamentoForm: state.agendamentoForm
-  });
+  }
 }
 
 const mapDispatchToProps = {
   setFieldAgendamento,
   createAgendamento,
   setAllFieldsAgendamento,
-  resetFormAgendamento
+  resetFormAgendamento,
+  watchCarros
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgendamentoForm);

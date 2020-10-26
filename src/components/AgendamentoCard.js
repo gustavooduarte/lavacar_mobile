@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ItemRow from './ItemRow';
+import { STATUS_CONFIRMADO, STATUS_AGUARDANDO, STATUS_CANCELADO, STATUS_REALIZADO } from '../utils'
 
 const AgendamentoList = (props) => {
   const { agendamento, onPressItem } = props;
@@ -10,17 +11,18 @@ const AgendamentoList = (props) => {
     let cor;
 
     switch(parameters){
-      case 'confirmado':
+      case STATUS_CONFIRMADO:
         cor = '#08DB00'
         break;
-      case 'aguardando':
+      case STATUS_AGUARDANDO:
         cor = '#FC9F35'
         break;
-      case 'cancelado':
+      case STATUS_CANCELADO:
         cor = '#FC3535'
         break;
-      case 'realizado':
+      case STATUS_REALIZADO:
         cor = '#00AFEF'
+        break;
       default:
         cor = 'gray'
     }

@@ -104,12 +104,12 @@ class reciboForm extends React.Component {
           </FormRow>
 
           <FormRow>
-            <Text>Cidade:</Text>
+            <Text>Endereco:</Text>
             <TextInput
               style={styles.textInput}
               placeholder="Digite valor do servico..."
-              value={reciboForm.cidade}
-              onChangeText={value => setFieldRecibo('cidade', value)}
+              value={reciboForm.endereco}
+              onChangeText={value => setFieldRecibo('endereco', value)}
             />
           </FormRow>
 

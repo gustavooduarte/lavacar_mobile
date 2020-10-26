@@ -7,9 +7,11 @@ import { connect } from 'react-redux';
 import { deleteRecibo }from '../actions';
 
 class ReciboDetail extends React.Component {
+
   render() {
 
     const { recibo } = this.props.route.params;
+    const {assinadoString} = recibo.assinado ? "Sim" : "Não"
 
     return (
       <ScrollView>
@@ -17,13 +19,17 @@ class ReciboDetail extends React.Component {
           <View style={styles.calendarIcon}>
             <Icon name={'format-list-bulleted'} size={70} color='#808080' />
           </View>
+          <Line label={"Identificador"} content={recibo.id} />
           <Line label={"Nome"} content={recibo.nome} />
           <Line label={"CPF"} content={recibo.cpf} />
           <Line label={"Data de Emissão"} content={recibo.data_emissao} />
           <Line label={"Servico"} content={recibo.servico} />
           <Line label={"Valor"} content={recibo.valor} />
-          <Line label={"Cidade"} content={recibo.cidade} />
-          <Line label={"Assinado"} content={recibo.assinado} />
+          <Line label={"Endereco"} content={recibo.endereco} />
+          
+          <Line label={"Assinado"} 
+            content={recibo.assinado ? "Sim" : "Não" } 
+          />
 
           <View style = {styles.opcoes}>
             <View style={styles.button}>

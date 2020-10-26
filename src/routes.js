@@ -178,7 +178,10 @@ function tabHome() {
       <Tab.Screen name="Agenda" component={stackAgenda} />
       <Tab.Screen name="Meu Carro" component={stackCarro} />
       <Tab.Screen name="Recibos" component={stackRecibos} />
-      <Tab.Screen name="Perfil" component={stackPerfil} />
+      { 
+        // Parte Removida para a realização de manuntenção
+        // <Tab.Screen name="Perfil" component={stackPerfil} />
+      }
     </Tab.Navigator>
   );
 }

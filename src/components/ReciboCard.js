@@ -11,7 +11,7 @@ const ReciboList = (props) => {
       <View style={styles.item}>
         <View style={styles.line}>
           <Text style={styles.recibo} >Recibo</Text>
-          <Text style={styles.numrecibo}>Nº {recibo.id}</Text>
+          <Text style={[styles.idRecibo, recibo.id.length > 5 ? styles.longID : null]}>ID {recibo.id}</Text>
         </View>
         <ItemRow label={'Nome:'} content={recibo.nome} />
 
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     color: '#000'
   },
 
-  numrecibo: {
+  idRecibo: {
     fontSize: 20,
     color: "#808080"
   },
@@ -78,6 +78,10 @@ const styles = StyleSheet.create({
     color: '#00AFEF',
     fontSize: 15,
     fontWeight: 'bold',
+  },
+  longID: {
+    fontSize: 14,
+    alignSelf: 'center'
   }
 })
 
