@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import ReciboList from '../components/ReciboList'
+import { View, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
+import ReciboCard from '../components/ReciboCard'
 
 import { connect } from 'react-redux';
 
@@ -22,11 +22,17 @@ class Recibos extends React.Component {
 
     return (
       <View>
-        <View >
-          <ReciboList
-            recibos={this.props.recibos}
-            onPressItem={(parameters) => this.props.navigation.navigate('ReciboDetail', parameters)} />
-        </View>
+        <FlatList
+          style={styles.list}
+          data={this.props.recibos}
+          keyExtractor={recibo => recibo.id}
+          renderItem={({ item: recibo }) => (
+
+          <ReciboCard
+            recibo={recibo}
+            onPressItem={() => this.props.navigation.navigate('ReciboDetail', { recibo })} />
+          )}
+        />
       </View>
     );
   }
@@ -34,9 +40,12 @@ class Recibos extends React.Component {
 
 const styles = StyleSheet.create({
   loading: {
-    alignContent: 'center',
-    height: '100%',
-  }
+    alignContent: 'center'
+  },
+  list: {
+    paddingTop: 20,
+    marginBottom: 30,
+  },
 });
 
 const mapStateToProps = state => {

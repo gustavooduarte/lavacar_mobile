@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator} from 'react-native';
-import AgendamentoList from '../components/AgendamentoList';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
+import AgendamentoCard from '../components/AgendamentoCard';
 
 import { connect } from 'react-redux';
 
@@ -26,10 +26,18 @@ class Agenda extends React.Component {
           <Text style={styles.titleText}> Histórico de Agendamentos </Text>
         </View>
 
-        <View style={styles.container}>
-          <AgendamentoList
-            agendamentos={this.props.agendamentos}
-            onPressItem={(parameters) => this.props.navigation.navigate('AgendamentoDetail', parameters)} />
+        <View>
+          <FlatList
+            style={styles.list}
+            data={this.props.agendamentos}
+            keyExtractor={agendamento => agendamento.id.toString()}
+            renderItem={({ item: agendamento }) => (
+              <AgendamentoCard 
+                agendamento = {agendamento}
+                onPressItem={() => this.props.navigation.navigate('AgendamentoDetail', { agendamento })}
+              />
+           )}
+          />
         </View>
       </View>
     );
@@ -41,7 +49,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     height: '100%',
   },
-  container: {
+  list: {
     marginBottom: 100,
   },
   title: {

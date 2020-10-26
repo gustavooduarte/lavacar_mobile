@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import CarroList from '../components/CarroList'
+import { View, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
+import CarroCard from '../components/CarroCard'
 
 import { connect } from 'react-redux';
 
@@ -22,9 +22,16 @@ class MeuCarro extends React.Component {
 
     return (
       <View>
-          <CarroList
-            carros={this.props.carros}
-            onPressItem={(parameters) => this.props.navigation.navigate('MeuCarroDetail', parameters)} />
+        <FlatList
+          style={styles.list}
+          data={this.props.carros}
+          keyExtractor={carro => carro.id}
+          renderItem={({ item: carro }) => (
+          <CarroCard
+            carro={carro}
+            onPressItem={() => this.props.navigation.navigate('MeuCarroDetail', { carro })} />
+          )}
+        />
       </View>
     );
   }
@@ -32,8 +39,11 @@ class MeuCarro extends React.Component {
 
 const styles = StyleSheet.create({
   loading: {
-    alignContent: 'center',
-    height: '100%',
+    alignContent: 'center'
+  },
+  list: {
+    paddingTop: 20,
+    marginBottom: 30,
   },
 });
 

@@ -76,10 +76,6 @@ class LoginScreen extends React.Component {
     }
   }
 
-  processRegister() {
-    console.log('Register OK');
-  }
-
   renderMessage() {
     const { message } = this.state;
 
@@ -104,8 +100,7 @@ class LoginScreen extends React.Component {
           <Text style={styles.textLogin}>Entrar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.register} onPress={() => this.processRegister()}>
-          <Text>Não possui conta?</Text>
-          <Text style={styles.textRegister}> Cadastre-se aqui</Text>
+          <Text>Para criar nova conta digite email e senha.</Text>
         </TouchableOpacity>
       </FormRow>
     )
